@@ -14,6 +14,7 @@ import { HomeComponent } from './home/home.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { SharedModule } from './shared/shared.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { LoggerConfig, LoggerModule } from '@flight-workspace/logger-lib';
 
 @NgModule({
   imports: [
@@ -24,10 +25,17 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     BrowserAnimationsModule,
     FlightCancellingModule,
 
+    LoggerModule.forRoot({ enableDebug: true }),
+    //             ^---- Global Service === AppModule === Root Scope (DI)
+
     FlightLibModule.forRoot(),
     SharedModule.forRoot(),
     RouterModule.forRoot(APP_ROUTES),
   ],
+  // providers: [
+
+  //   { provide: LoggerConfig, useValue: { enable_Debug: true } }
+  // ],
   declarations: [
     AppComponent,
     SidebarComponent,
@@ -35,7 +43,6 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     HomeComponent,
     BasketComponent
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
