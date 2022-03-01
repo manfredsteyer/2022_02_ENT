@@ -19,7 +19,7 @@
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
         "cacheableOperations": ["build", "lint", "test", "e2e"],
-        "--cacheDirectory": "c:\\temp\\cache",
+        "--cacheDirectory": "z:\\temp\\cache",
         "parallel": 1
       }
     }

@@ -2,6 +2,11 @@
 /* eslint-disable @angular-eslint/no-empty-lifecycle-method */
 import {Component, OnInit} from '@angular/core';
 import { FlightService } from '@flight-workspace/flight-lib';
+import { Store } from '@ngrx/store';
+import { take } from 'rxjs';
+import { loadFlights, loadFlightsSuccess, updateFlight } from '../+state/flight-booking.actions';
+import { FlightBookingAppStateSlice, flightBookingFeatureKey } from '../+state/flight-booking.reducer';
+import { selectFlights, selectFlights2, selectFlights3 } from '../+state/flight-booking.selectors';
 //import {FlightService} from '@flight-workspace/flight-lib';
 
 @Component({
@@ -25,8 +30,11 @@ export class FlightSearchComponent implements OnInit {
     5: true
   };
 
+  flights$ = this.store.select(selectFlights3);
+
   constructor(
-    private flightService: FlightService) {
+    private flightService: FlightService,
+    private store: Store) {
   }
 
   ngOnInit() {
@@ -34,13 +42,16 @@ export class FlightSearchComponent implements OnInit {
 
   search(): void {
     if (!this.from || !this.to) return;
-
-    this.flightService
-      .load(this.from, this.to, this.urgent);
+    this.store.dispatch(loadFlights({from: this.from, to: this.to}));
   }
 
   delay(): void {
-    this.flightService.delay();
+    // this.flightService.delay();
+    this.flights$.pipe(take(1)).subscribe(flights => {
+      const flight = {...flights[0], date: new Date().toISOString() };
+      this.store.dispatch(updateFlight({ flight }));
+    });
+
   }
 
 }

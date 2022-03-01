@@ -15,12 +15,21 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { SharedModule } from './shared/shared.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { LoggerConfig, LoggerModule } from '@flight-workspace/logger-lib';
+import { FlightLookaheadComponent } from './lookahead/flight-lookahead.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './+state';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     FlightBookingModule,
+
+    ReactiveFormsModule,
 
     BrowserAnimationsModule,
     FlightCancellingModule,
@@ -31,12 +40,19 @@ import { LoggerConfig, LoggerModule } from '@flight-workspace/logger-lib';
     FlightLibModule.forRoot(),
     SharedModule.forRoot(),
     RouterModule.forRoot(APP_ROUTES),
+
+    // NGRX --->  Meta-Reducer ---> Meta-Reducer ---> Meta-Reducer --->  REDUCER
+
+    StoreModule.forRoot(reducers, { metaReducers }),
+    EffectsModule.forRoot(),
+    !environment.production ? StoreDevtoolsModule.instrument() : [],
   ],
   // providers: [
 
   //   { provide: LoggerConfig, useValue: { enable_Debug: true } }
   // ],
   declarations: [
+    FlightLookaheadComponent,
     AppComponent,
     SidebarComponent,
     NavbarComponent,
